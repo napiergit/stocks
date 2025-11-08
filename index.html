@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock Trading Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .widget {
+            @apply bg-white rounded-lg shadow-lg p-4 hover:shadow-xl transition-shadow;
+        }
+        .widget-header {
+            @apply text-lg font-bold mb-3 text-gray-800 border-b pb-2;
+        }
+        .link-button {
+            @apply bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors inline-block;
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+        <!-- Header -->
+        <div class="text-center mb-8">
+            <h1 class="text-4xl font-bold text-white mb-2">📈 Stock Trading Dashboard</h1>
+            <p class="text-gray-300">Your all-in-one trading command center</p>
+        </div>
+
+        <!-- Search Bar -->
+        <div class="max-w-2xl mx-auto mb-8">
+            <div class="bg-white rounded-lg shadow-xl p-6">
+                <label class="block text-gray-700 font-semibold mb-2">Search Ticker</label>
+                <div class="flex gap-2">
+                    <input 
+                        type="text" 
+                        id="tickerInput" 
+                        placeholder="Enter ticker symbol (e.g., AAPL, TSLA)" 
+                        class="flex-1 px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none text-lg uppercase"
+                        onkeypress="if(event.key === 'Enter') searchTicker()"
+                    >
+                    <button 
+                        onclick="searchTicker()" 
+                        class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-semibold transition-colors"
+                    >
+                        Search
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dashboard (Hidden until search) -->
+        <div id="dashboard" class="hidden">
+            <div class="bg-white/10 backdrop-blur-sm rounded-lg p-6 mb-6">
+                <h2 class="text-3xl font-bold text-white mb-2" id="tickerDisplay"></h2>
+                <p class="text-gray-300" id="companyName">Loading company info...</p>
+            </div>
+
+            <!-- Grid Layout -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                
+                <!-- TradingView Chart Widget -->
+                <div class="widget lg:col-span-2">
+                    <div class="widget-header">📊 Price Chart (TradingView)</div>
+                    <div id="tradingview-widget" class="h-96"></div>
+                </div>
+
+                <!-- Options Widget -->
+                <div class="widget">
+                    <div class="widget-header">🎯 Options Flow</div>
+                    <p class="text-gray-600 mb-4">View options data and unusual activity</p>
+                    <a id="optionsLink" href="#" target="_blank" class="link-button">
+                        Open Options Dashboard →
+                    </a>
+                </div>
+
+                <!-- Unusual Flow Widget -->
+                <div class="widget">
+                    <div class="widget-header">🌊 Unusual Flow</div>
+                    <p class="text-gray-600 mb-4">Track unusual options activity</p>
+                    <a id="flowLink" href="#" target="_blank" class="link-button">
+                        Open Flow Dashboard →
+                    </a>
+                </div>
+
+                <!-- Company Info Widget -->
+                <div class="widget">
+                    <div class="widget-header">🏢 Company Information</div>
+                    <div id="companyInfo" class="space-y-2 text-sm">
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Sector:</span>
+                            <span class="font-semibold" id="sector">-</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Market Cap:</span>
+                            <span class="font-semibold" id="marketCap">-</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">P/E Ratio:</span>
+                            <span class="font-semibold" id="peRatio">-</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">EPS:</span>
+                            <span class="font-semibold" id="eps">-</span>
+                        </div>
+                        <div class="mt-4 pt-4 border-t">
+                            <p class="text-gray-700 text-xs" id="description">Loading...</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Earnings Widget -->
+                <div class="widget">
+                    <div class="widget-header">📅 Earnings</div>
+                    <div id="earningsInfo" class="space-y-2 text-sm">
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Next Earnings:</span>
+                            <span class="font-semibold" id="nextEarnings">-</span>
+                        </div>
+                        <div class="mt-4 pt-4 border-t">
+                            <p class="text-gray-600 text-xs mb-2">Previous Earnings:</p>
+                            <div id="previousEarnings" class="space-y-1">
+                                <div class="text-xs">Loading...</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tear Comments Widget -->
+                <div class="widget">
+                    <div class="widget-header">💬 Tear Comments</div>
+                    <p class="text-gray-600 mb-4 text-sm">Community discussions from TradingEdge</p>
+                    <a id="tearLink" href="#" target="_blank" class="link-button">
+                        View Discussions →
+                    </a>
+                </div>
+
+                <!-- Reddit Widget -->
+                <div class="widget">
+                    <div class="widget-header">🤖 Reddit Discussions</div>
+                    <p class="text-gray-600 mb-4 text-sm">See what Reddit is saying</p>
+                    <a id="redditLink" href="#" target="_blank" class="link-button">
+                        Search Reddit →
+                    </a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- TradingView Widget Script -->
+    <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
+    
+    <script src="app.js"></script>
+</body>
+</html>
