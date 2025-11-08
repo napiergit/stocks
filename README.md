@@ -21,7 +21,3 @@ A comprehensive stock trading dashboard that aggregates data from multiple sourc
 
 Visit: [Your GitHub Pages URL]
 
-## Credentials
-
-- Options Dashboard: dex.tradingedge.club (Password: DaddyPowel321)
-- Unusual Flow: flow.tradingedge.club (Password: GoWithTheFlow)
